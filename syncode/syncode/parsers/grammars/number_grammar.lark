@@ -1,0 +1,3 @@
+start: INT
+
+%import common.INT

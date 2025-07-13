@@ -1,0 +1,5 @@
+__pycache__
+cache
+*_res_file.txt
+logging/
+src/logging/

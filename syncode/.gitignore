@@ -1,0 +1,9 @@
+results/
+core/__pycache__
+__pycache__
+syncode/__pycache__
+syncode/core/__pycache__
+.vscode/
+tmp*
+cache/
+.ipynb_checkpoints/

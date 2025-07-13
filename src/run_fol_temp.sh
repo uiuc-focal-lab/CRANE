@@ -1,0 +1,10 @@
+
+python main.py --do_cot True --cot_model "meta-llama/Llama-3.1-8B-Instruct" --dataset fol --overwrite_results True --num_shots 2 --cot_grammar_mode original --cot_grammar text --out_grammar text --max_tokens 800 --cot_device 'cuda:1' --write_file True --modify_system_prompt True  --log_dir "logging_samp0" --temperature 0.7 
+
+python main.py --do_cot True --cot_model "meta-llama/Llama-3.1-8B-Instruct" --dataset fol --overwrite_results True --num_shots 2 --cot_grammar_mode original --cot_grammar text --out_grammar text --max_tokens 800 --cot_device 'cuda:1' --write_file True --modify_system_prompt True  --log_dir "logging_samp1" --temperature 0.7 
+
+python main.py --do_cot True --cot_model "meta-llama/Llama-3.1-8B-Instruct" --dataset fol --overwrite_results True --num_shots 2 --cot_grammar_mode original --cot_grammar text --out_grammar text --max_tokens 800 --cot_device 'cuda:1' --write_file True --modify_system_prompt True  --log_dir "logging_samp2" --temperature 0.7 
+
+
+
+
