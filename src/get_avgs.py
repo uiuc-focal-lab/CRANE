@@ -155,13 +155,10 @@ def get_results(task, model_name):
             
             results[f'{num_shot}_shot']['unconstrained'] =  get_avgs_gsm(f"{results_dir}/cot=False/parsing=regex/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl", parser)
             
-            #results[f'{num_shot}_shot']['unconstrained_sample'] = get_pass_k_gsm([f"./logging_samp{i}/{task}/cot-model={model_name}/cot=False/parsing=regex/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl" for i in range(3)], parser)
-            
             results[f'{num_shot}_shot']['constrained'] =  get_avgs_gsm(f"{results_dir}/cot=False/parsing=regex/gsm-gsm/cot-grammar-mode=grammar_strict/{num_shot}-shot_1_samples_True.jsonl", parser)
 
             results[f'{num_shot}_shot']['cot_unconstrained'] =  get_avgs_gsm(f"{results_dir}/cot=True/parsing=regex/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl", parser)  
             
-            #results[f'{num_shot}_shot']['cot_unconstrained_sample'] = get_pass_k_gsm([f"./logging_samp{i}/{task}/cot-model={model_name}/cot=True/parsing=regex/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl" for i in range(3)], parser)
             
             results[f'{num_shot}_shot']['adaptive'] =  get_avgs_gsm(f"{results_dir}/cot=True/parsing=regex/gsm-gsm/cot-grammar-mode=adaptive/{num_shot}-shot_1_samples_True.jsonl", parser)      
         
@@ -171,9 +168,6 @@ def get_results(task, model_name):
             results[f'{num_shot}_shot'] = {}
             results[f'{num_shot}_shot']['cot_constrained'] =  get_avgs_fol(f"./logging/fol/cot-model=Qwen2.5-Math-7B-Instruct/cot=False/parsing=none/prover9-prover9/cot-grammar-mode=grammar_strict/2-shot_1_samples_True.jsonl")
             results[f'{num_shot}_shot']['cot_unconstrained'] =  get_avgs_fol(f"{results_dir}/cot=True/parsing=none/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl")  
-            results[f'{num_shot}_shot']['cot_unconstrained_sample'] = get_pass_k_fol([f"./logging_samp{i}/{task}/cot-model={model_name}/cot=True/parsing=none/text-text/cot-grammar-mode=original/{num_shot}-shot_1_samples_True.jsonl" for i in range(3)])
-            
-            #results[f'{num_shot}_shot']['adaptive_grammar'] =  get_avgs_fol(f"{results_dir}/cot=True/parsing=none/prover9-prover9/cot-grammar-mode=adaptive_grammar/{num_shot}-shot_1_samples_True.jsonl")     
             results[f'{num_shot}_shot']['adaptive'] =  get_avgs_fol(f"{results_dir}/cot=True/parsing=none/prover9-prover9/cot-grammar-mode=adaptive/{num_shot}-shot_1_samples_True.jsonl")                
     
     for k, v in results.items():

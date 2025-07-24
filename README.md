@@ -31,13 +31,21 @@ export PROVER9="CRANE/src/symbolic_solvers/Prover9"
 
 ## How to Run Evals 
 
-Example:
+Refer to the bash scripts `src/run_{task}.sh` for reproducing the main results reported in the paper. For instance, for GSM-Symbolic:
 ```bash
 cd src/
 bash run_gsm_symbolic.sh
 ```
 
-Refer to `src/prompting_templates` for modifying prompt style.
+Refer to the arguments in `src/main.py` for more information and to the yaml files in `src/prompting_templates` for modifying prompt style.
+
+### Analyzing Results
+
+After running evaluation, the result is stored in a jsonl in the folder `logging` by default. Analyze the results by running the following:
+```bash
+cd src/
+python get_avgs.py --model_name MODEL_NAME --task TASK
+```
 
 
 
