@@ -26,7 +26,7 @@ pip install -e .
 
 Export environment variable for `PROVER9` like the following
 ```bash
-export PROVER9="/home/tarun/struct_cot/src/symbolic_solvers/Prover9"
+export PROVER9="CRANE/src/symbolic_solvers/Prover9"
 ```
 
 ## How to Run Evals 
