@@ -3,3 +3,4 @@ cache
 *_res_file.txt
 logging/
 src/logging/
+*.egg-info/

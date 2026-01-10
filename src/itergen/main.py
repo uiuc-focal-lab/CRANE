@@ -1,4 +1,4 @@
-import common
+import iter_syncode.common as common
 import torch
 from typing import Any, Dict, Iterator, Optional, Tuple, Union
 from iter_syncode.parsers.grammars import Grammar
