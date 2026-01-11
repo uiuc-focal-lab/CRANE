@@ -5,6 +5,12 @@ Official Implementation of [CRANE: Reasoning with constrained LLM generation](ht
 
 ## Installation
 
+Install CRANE dependency
+```bash
+cd crane/
+pip install -e .
+```
+
 Install SynCode dependency. 
 ```bash
 # clone syncode
@@ -12,16 +18,15 @@ cd syncode/
 pip install -e .
 ```
 
-Install Itergen dependency
+Install latex2sympy. 
 ```bash
-cd struct_cot/src/itergen/iter_syncode/
+cd src/math_evaluator/latex2sympy/
 pip install -e .
 ```
 
-Install latex2sympy. 
+Install other requirements.
 ```bash
-cd struct_cot/src/math_evaluator/latex2sympy/
-pip install -e .
+pip install -r requirements.txt
 ```
 
 Export environment variable for `PROVER9` like the following

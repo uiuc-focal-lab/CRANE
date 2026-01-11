@@ -1,2 +1,0 @@
-recursive-include syncode/parsers/grammars *.lark
-recursive-include syncode/larkm/grammars *.lark

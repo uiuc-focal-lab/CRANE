@@ -1,14 +1,9 @@
 from syncode import Syncode, AdaptiveSynCode
-# from iter_syncode.infer import Syncode
 from syncode.language_model import KeywordsStoppingCriteria
 import time
 from .gsm_symbolic_constraints import generate_gsm_symbolic_with_itergen
 from .fol_constraints import generate_fol_with_itergen
-from itergen.main import IterGen, AdaptiveConstrainedDecoder
-import torch
-from transformers.generation.utils import GenerationMode
-from transformers.generation.configuration_utils import GenerationConfig
-from transformers import StoppingCriteriaList, StoppingCriteria
+from crane.main import IterGen, CRANE
 
 
 class BaseLM():
@@ -43,7 +38,7 @@ class BaseLM():
                                     device = device,
                                     **gen_kwargs)
             else:
-                self.model = AdaptiveConstrainedDecoder(grammar= grammar, 
+                self.model = CRANE(grammar= grammar, 
                                     model_id=model_name, 
                                     parse_output_only=True, 
                                     recurrence_penalty=recurrence_penalty,

@@ -1,0 +1,9 @@
+fire
+interegular
+regex==2023.8.8
+torch
+tqdm
+transformers==4.42
+mxeval @ git+https://github.com/shubhamugare/mxeval.git
+datasets
+jsonschema
