@@ -1,3 +1,0 @@
-// Example 4.54 (Fig 4.41) from the Dragon Book
-start : ch ch
-ch : "c" ch | "d"

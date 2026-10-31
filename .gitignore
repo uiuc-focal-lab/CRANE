@@ -4,3 +4,8 @@ cache
 logging/
 src/logging/
 *.egg-info/
+iter_cache/
+logging2/
+.pytest_cache/
+/results/
+/RELEASE_NOTES.md

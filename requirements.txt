@@ -1,7 +1,0 @@
-git+https://github.com/uiuc-focal-lab/syncode.git
-word2number
-Pebble
-timeout-decorator
-func_timeout
-z3-solver
-ray

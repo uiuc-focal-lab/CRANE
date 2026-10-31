@@ -1,40 +1,18 @@
-import crane.iter_syncode.common as common
+import crane.decoding.common as common
 import torch
 from typing import Any, Dict, Iterator, Optional, Tuple, Union
-from crane.iter_syncode.parsers.grammars import Grammar
+from crane.decoding.parsers.grammars import Grammar
 from transformers.generation.utils import GenerationMode
 from transformers.generation.configuration_utils import GenerationConfig
 from transformers.generation.stopping_criteria import StoppingCriteria, StoppingCriteriaList
-from crane.iter_syncode.dfa_mask_store import DFAMaskStore
-from crane.iter_syncode.parse_result import ParseResult, RemainderState
-from crane.iter_syncode.parsers.incremental_parser import IncrementalParser, SymbolPosMap
+from crane.decoding.dfa_mask_store import DFAMaskStore
+from crane.decoding.parse_result import ParseResult, RemainderState
+from crane.decoding.parsers.incremental_parser import IncrementalParser, SymbolPosMap
 from transformers.cache_utils import DynamicCache
 from crane.trace import Trace
-from crane.iter_syncode.parsers import create_base_parser, create_parser
+from crane.decoding.parsers import create_base_parser, create_parser
 
-class KeywordsStoppingCriteria(StoppingCriteria):
-    '''
-    Assume batch_size = 1
-
-    We can use this class to check if the stop word is present in the completion. This is more expensive since we need to decode the completion to check if the stop word is present.
-    '''
-    def __init__(self, tokenizer, stop_words = [], input_ids_cutoff = 0):
-        super().__init__()
-        self.tokenizer = tokenizer
-        self.stop_words = stop_words
-        self.stop_words_ids = []
-        self.input_ids_cutoff = input_ids_cutoff
-
-    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor) -> bool:
-        partial_output = self.tokenizer.batch_decode(input_ids[:, self.input_ids_cutoff: ], skip_special_tokens=True)[0]
-        for stop_word in self.stop_words:
-            if stop_word == '?' and stop_word in partial_output:
-                if 'The final answer is' in partial_output:
-                    return True
-            else:
-                if stop_word in partial_output:
-                    return True
-        return False    
+from crane.decoding.stopping import KeywordsStoppingCriteria
 
 class IterGen:
     """
@@ -135,9 +113,15 @@ class IterGen:
         """
         self.cursors = [0 for _ in range(self.num_outputs)]
         self.generation_config.update(**gen_args)
-        self.logit_warper = self.model._get_logits_warper(self.generation_config, device=self.device)
+        if hasattr(self.model, "_get_logits_warper"):
+            self.logit_warper = self.model._get_logits_warper(self.generation_config, device=self.device)
+        elif hasattr(self.model, "_get_logits_processor"):
+            self.logit_warper = self.model._get_logits_processor(self.generation_config, input_ids_seq_length=1, device=self.device)
+        else:
+            from transformers import LogitsProcessorList
+            self.logit_warper = LogitsProcessorList()
 
-    def start(self, prompt: Union[str, list], reasoning = None):
+    def start(self, prompt: Union[str, list], reasoning = None, tools = None):
         """
         Start the iteration process.
         """
@@ -159,7 +143,7 @@ class IterGen:
                 input_batch = [prompt]
             inputs = self.tokenizer(input_batch, return_tensors="pt").to(self.device)
         elif (isinstance(prompt, list)):
-            chat_prompt = self.tokenizer.apply_chat_template(prompt, add_generation_prompt=True, tokenize=False)
+            chat_prompt = self.tokenizer.apply_chat_template(prompt, tools=tools, add_generation_prompt=True, tokenize=False)
             if reasoning is not None:
                 input_batch = [chat_prompt + reasoning]
             else:
@@ -743,7 +727,7 @@ class CRANE(IterGen):
         self.current_state = UnconstrainedMode
         self.last_constrained_end = len(self.session_tokens[0]) - 1
 
-    def start(self, prompt: Union[str, list], reasoning = None):
+    def start(self, prompt: Union[str, list], reasoning = None, tools = None):
         """
         Start the iteration process.
         """
@@ -762,7 +746,7 @@ class CRANE(IterGen):
             input_batch = [prompt]
             inputs = self.tokenizer(input_batch, return_tensors="pt").to(self.device)
         elif (isinstance(prompt, list)):
-            chat_prompt = self.tokenizer.apply_chat_template(prompt, add_generation_prompt=True, tokenize=False)
+            chat_prompt = self.tokenizer.apply_chat_template(prompt, tools=tools, add_generation_prompt=True, tokenize=False)
             input_batch = [chat_prompt]
             inputs = self.tokenizer(input_batch, return_tensors="pt").to(self.device)
 
