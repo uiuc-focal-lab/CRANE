@@ -5,54 +5,57 @@ Official Implementation of [CRANE: Reasoning with constrained LLM generation](ht
 
 ## Installation
 
-Install CRANE dependency
 ```bash
-cd crane/
-pip install -e .
+python -m pip install -e .
 ```
 
-Install SynCode dependency. 
-```bash
-# clone syncode
-cd syncode/
-pip install -e .
+CRANE, IterGen, and baseline grammar-constrained inference use one shared
+`crane.decoding` backend. There are no separate SynCode or IterSynCode source
+packages or editable installs. Cursor and backtracking support live in the same
+incremental parser used by the baseline logits processor.
+
+```python
+from crane import CRANE, IterGen
+from crane.models import BaseLM
+from crane.decoding.parsers.grammars import Grammar
 ```
 
-Install latex2sympy. 
-```bash
-cd src/math_evaluator/latex2sympy/
-pip install -e .
-```
+`HF_CACHE` selects the model-weight cache (default: the standard Hugging Face
+hub cache). `CRANE_CACHE` selects generated parser and DFA-mask caches. The old
+`ITER_SYNCODE_CACHE` and `SYNCODE_CACHE` environment variables remain accepted
+as fallbacks. Generated caches use a new `decoding-v1` subdirectory because old
+pickles reference the removed module names and must be rebuilt once.
 
-Install other requirements.
-```bash
-pip install -r requirements.txt
-```
-
-Export environment variable for `PROVER9` like the following
-```bash
-export PROVER9="CRANE/src/symbolic_solvers/Prover9"
-```
+For first-order logic evaluation, set `PROVER9` to the directory containing
+the executable, or use the bundled binary in a source checkout.
 
 ## How to Run Evals 
 
-Refer to the bash scripts `src/run_{task}.sh` for reproducing the main results reported in the paper. For instance, for GSM-Symbolic:
+Refer to the bash scripts `src/crane/run_{task}.sh` for reproducing the main results reported in the paper. For instance, for GSM-Symbolic:
 ```bash
-cd src/
-bash run_gsm_symbolic.sh
+bash src/crane/run_gsm_symbolic.sh
 ```
 
-Refer to the arguments in `src/main.py` for more information and to the yaml files in `src/prompting_templates` for modifying prompt style.
+Use `crane-eval --help` for arguments and `src/crane/prompt_templates` for prompt styles.
 
 ### Analyzing Results
 
 After running evaluation, the result is stored in a jsonl in the folder `logging` by default. Analyze the results by running the following:
 ```bash
-cd src/
-python get_avgs.py --model_name MODEL_NAME --task TASK
+python -m crane.get_avgs --model_name MODEL_NAME --task TASK
 ```
 
 
+
+## Tests
+
+```bash
+python -m pip install pytest
+python -m pytest tests -q
+```
+
+Set `CRANE_TEST_MODEL` to a cached model ID or local model path to include
+the real-model baseline, cursor/backtracking, and adaptive-decoding checks.
 
 ## Citation
 

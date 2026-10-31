@@ -1,8 +1,0 @@
-fire
-interegular
-regex==2023.8.8
-torch
-tqdm
-mxeval @ git+https://github.com/shubhamugare/mxeval.git
-datasets
-jsonschema
