@@ -118,10 +118,13 @@ class BaseLM():
                 callback_problem = problem
                 if tools_key != 'tools' and tools_key in problem:
                     callback_problem = {**problem, 'tools': problem[tools_key]}
-                out, res_dct = self._generate_with_itergen(
-                    self.model, callback_problem, prompt_key,
-                    self.max_itergen_iter, self.backwards_limit, **callback_context
-                )
+                try:
+                    out, res_dct = self._generate_with_itergen(
+                        self.model, callback_problem, prompt_key,
+                        self.max_itergen_iter, self.backwards_limit, **callback_context
+                    )
+                except:
+                    out, res_dct = [""], {'time': 0, 'tokens': 0}
                 new_batch.append(problem.copy())
                 new_batch[-1][response_key] = out[0] if isinstance(out, list) else out
                 new_batch[-1][info_key] = res_dct

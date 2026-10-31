@@ -40,7 +40,7 @@ def test_callback_context_and_output(monkeypatch, output):
     assert calls[-1] == ({"prompt": "legacy"}, {})
 
 
-def test_callback_exception_propagates(monkeypatch):
+def test_callback_exception_preserves_legacy_fallback(monkeypatch):
     from crane.models import base_model
 
     class Decoder:
@@ -52,8 +52,9 @@ def test_callback_exception_propagates(monkeypatch):
 
     monkeypatch.setattr(base_model, "IterGen", Decoder)
     model = base_model.BaseLM("test", mode="itergen", constraint_fn=fail)
-    with pytest.raises(RuntimeError, match="callback failure"):
-        model([{"prompt": "hello"}])
+    result = model([{"prompt": "hello"}])
+    assert result[0]["llm_response"] == ""
+    assert result[0]["response_info"] == {"time": 0, "tokens": 0}
 
 
 @pytest.mark.parametrize("decoder_name", ["IterGen", "CRANE"])
